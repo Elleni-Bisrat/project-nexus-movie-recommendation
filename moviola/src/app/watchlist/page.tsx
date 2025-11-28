@@ -1,4 +1,3 @@
-// src/app/watchlist/page.tsx
 "use client";
 import { useWatchlist } from "@/contexts/WatchlistContext";
 import styled from "styled-components";
@@ -15,10 +14,8 @@ const Header = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
-  padding-bottom: .5rem;
-  box-shadow: 0 1px 0 #b5b1b1ff, 
-              0 2px 4px rgba(149, 137, 137, 0.3); 
-  
+  padding-bottom: 0.5rem;
+  box-shadow: 0 1px 0 #b5b1b1ff, 0 2px 4px rgba(149, 137, 137, 0.3);
 `;
 
 const Title = styled.h1`
@@ -206,21 +203,15 @@ export default function WatchlistPage() {
     <Container>
       <Header>
         <Title>My Watchlist</Title>
-        <ClearButton onClick={handleClearWatchlist}>
-          Clear All
-        </ClearButton>
+        <ClearButton onClick={handleClearWatchlist}>Clear All</ClearButton>
       </Header>
-
       <WatchlistCount>
-        {watchlist.length} {watchlist.length === 1 ? 'movie' : 'movies'} in your watchlist
+        {watchlist.length} {watchlist.length === 1 ? "movie" : "movies"} in your
+        watchlist
       </WatchlistCount>
-
       <MovieGrid>
         {watchlist.map((movie) => (
-          <MovieCard 
-            key={movie.id} 
-            onClick={() => handleMovieClick(movie.id)}
-          >
+          <MovieCard key={movie.id} onClick={() => handleMovieClick(movie.id)}>
             <MoviePoster
               src={
                 movie.poster_path
@@ -236,18 +227,27 @@ export default function WatchlistPage() {
               <MovieTitle>{movie.title}</MovieTitle>
               <MovieDetails>
                 <MovieRating>
-                  ⭐ {movie.vote_average ? movie.vote_average.toFixed(1) : "N/A"}
+                  ⭐{" "}
+                  {movie.vote_average ? movie.vote_average.toFixed(1) : "N/A"}
                 </MovieRating>
                 <MovieYear>
-                  {movie.release_date ? movie.release_date.split("-")[0] : "N/A"}
+                  {movie.release_date
+                    ? movie.release_date.split("-")[0]
+                    : "N/A"}
                 </MovieYear>
               </MovieDetails>
               {movie.addedAt && (
-                <p style={{ fontSize: "0.8rem", color: "#666", marginBottom: "0.5rem" }}>
+                <p
+                  style={{
+                    fontSize: "0.8rem",
+                    color: "#666",
+                    marginBottom: "0.5rem",
+                  }}
+                >
                   Added: {formatDate(movie.addedAt)}
                 </p>
               )}
-              <RemoveButton 
+              <RemoveButton
                 onClick={(e) => handleRemoveFromWatchlist(e, movie.id)}
               >
                 Remove
