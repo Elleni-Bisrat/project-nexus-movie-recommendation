@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import MovieCard from "@/components/MovieCard";
 import styled from "styled-components";
 import { fetchMovieDetails } from "@/lib/api";
@@ -17,12 +17,12 @@ const Container = styled.div`
 const FilterSection = styled.section`
   background: white;
   padding: 2rem;
-  padding-top:0;
+  padding-top: 0;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   height: fit-content;
   top: 2rem;
-  margin-top:.7rem;
+  margin-top: 0.7rem;
 `;
 
 const MainSection = styled.section`
@@ -47,14 +47,14 @@ const SectionTitle = styled.h3`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  
+
   &:hover {
     color: #3182ce;
   }
 `;
 
 const FilterGroup = styled.div`
-margin-top:0px;
+  margin-top: 0px;
 `;
 
 const RadioGroup = styled.div`
@@ -90,7 +90,7 @@ const GenresGrid = styled.div`
 `;
 
 const GenreButton = styled.button`
-  padding: 0.3rem .1rem;
+  padding: 0.3rem 0.1rem;
   border: 1px solid #cbd5e0;
   border-radius: 15px;
   background: ${(props) => (props.selected ? "#3182ce" : "white")};
@@ -150,16 +150,40 @@ const PageTitle = styled.h1`
   font-weight: 700;
   color: #2d3748;
   margin-top: 2rem;
-  margin-left:4rem;
+  margin-left: 4rem;
 `;
 
 const Label = styled.label`
-  font-size:12px;
+  font-size: 12px;
 `;
 
 const ExpandIcon = styled.span`
   font-size: 0.8rem;
   transition: transform 0.2s ease;
+`;
+
+const ResultsInfo = styled.div`
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  padding: 0 1rem;
+`;
+
+const ClearFiltersButton = styled.button`
+  background: #e53e3e;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #c53030;
+    transform: translateY(-1px);
+  }
 `;
 
 export default function Discover() {
@@ -169,6 +193,7 @@ export default function Discover() {
   const [sortOption, setSortOption] = useState("popularity");
   const [filterExpanded, setFilterExpanded] = useState(true);
   const [sortExpanded, setSortExpanded] = useState(false);
+  const [watchedMovies, setWatchedMovies] = useState<number[]>([]);
 
   const genresCategories = [
     "All",
@@ -177,51 +202,107 @@ export default function Discover() {
     "Animation",
     "Comedy",
     "Crime",
-    "Documentary",
     "Drama",
     "Family",
     "Fantasy",
-    "History",
     "Horror",
-    "Music",
     "Mystery",
     "Romance",
     "Science Fiction",
     "TV Movie",
     "War",
   ];
-  const genreMap :Record<string,number>={
-    Action:28,
-    Romance:10749,
-    Comedy:35,
-    "Science Fiction":878,
-    Horror:27,
-    Adventure:100,
-    Animation:40,
-    Crime:22,
-    Documentary:33,
-    Drama:56,
-    Family:66,
-    Fantasy:78,
-    History:88,
-    Music:7,
-    Mystery:99,
-    "TV Movie":55,
-    War:55,
-  }
 
- const filterdMovies = popularMovies.filter((movie)=>{
-    if(selectedGenre === "All") return true;
-    if(!movie.genre_ids) return false;
-    return movie.genre_ids.includes(genreMap[selectedGenre]);
+  const genreMap: Record<string, number> = {
+    Action: 28,
+    Romance: 10749,
+    Comedy: 35,
+    "Science Fiction": 878,
+    Horror: 27,
+    Adventure: 12,
+    Animation: 16,
+    Crime: 80,
+    Documentary: 99,
+    Drama: 18,
+    Family: 10751,
+    Fantasy: 14,
+    History: 36,
+    Music: 10402,
+    Mystery: 9648,
+    "TV Movie": 10770,
+    War: 10752,
+  };
 
- })
+  // Load watched movies from localStorage
+  useEffect(() => {
+    const savedWatched = localStorage.getItem('watchedMovies');
+    if (savedWatched) {
+      setWatchedMovies(JSON.parse(savedWatched));
+    }
+  }, []);
+
+  // Save watched movies to localStorage
+  useEffect(() => {
+    localStorage.setItem('watchedMovies', JSON.stringify(watchedMovies));
+  }, [watchedMovies]);
+
+  const toggleWatched = (movieId: number) => {
+    setWatchedMovies(prev => 
+      prev.includes(movieId) 
+        ? prev.filter(id => id !== movieId)
+        : [...prev, movieId]
+    );
+  };
+
+  // Filter and sort movies using useMemo for performance
+  const filteredAndSortedMovies = useMemo(() => {
+    let filtered = popularMovies.filter((movie) => {
+      // Genre filter
+      if (selectedGenre !== "All") {
+        if (!movie.genre_ids || !movie.genre_ids.includes(genreMap[selectedGenre])) {
+          return false;
+        }
+      }
+
+      // "Show Me" filter
+      switch (showOption) {
+        case "seen":
+          return watchedMovies.includes(movie.id);
+        case "not-seen":
+          return !watchedMovies.includes(movie.id);
+        case "everything":
+        default:
+          return true;
+      }
+    });
+
+    // Sort movies
+    filtered.sort((a, b) => {
+      switch (sortOption) {
+        case "rating":
+          return (b.vote_average || 0) - (a.vote_average || 0);
+        case "alphabetical":
+          return a.title.localeCompare(b.title);
+        case "popularity":
+        default:
+          return (b.popularity || 0) - (a.popularity || 0);
+      }
+    });
+
+    return filtered;
+  }, [popularMovies, selectedGenre, showOption, sortOption, watchedMovies]);
 
   const sortOptions = [
     { id: "popularity", label: "Popularity" },
     { id: "rating", label: "Rating" },
     { id: "alphabetical", label: "Alphabetical" },
   ];
+
+  const clearAllFilters = () => {
+    setSelectedGenre("All");
+    setShowOption("everything");
+    setSortOption("popularity");
+  };
 
   useEffect(() => {
     const fetchPopularMovies = async () => {
@@ -235,6 +316,8 @@ export default function Discover() {
     fetchPopularMovies();
   }, []);
 
+  const hasActiveFilters = selectedGenre !== "All" || showOption !== "everything" || sortOption !== "popularity";
+
   return (
     <>
       <PageTitle>Popular Movies</PageTitle>
@@ -244,13 +327,17 @@ export default function Discover() {
           <FilterGroup>
             <SectionTitle onClick={() => setFilterExpanded(!filterExpanded)}>
               Filter
-              <ExpandIcon>{filterExpanded ? 'v' : '>'}</ExpandIcon>
+              <ExpandIcon>{filterExpanded ? "▼" : "▶"}</ExpandIcon>
             </SectionTitle>
-            
+
             {filterExpanded && (
               <>
                 <RadioGroup>
-                  <SectionTitle style={{ cursor: 'default', margin: '0.5rem 0' }}>Show Me</SectionTitle>
+                  <SectionTitle
+                    style={{ cursor: "default", margin: "0.5rem 0" }}
+                  >
+                    Show Me
+                  </SectionTitle>
                   <RadioOption onClick={() => setShowOption("everything")}>
                     <RadioInput
                       type="radio"
@@ -286,7 +373,11 @@ export default function Discover() {
                 <Divider />
 
                 {/* Genres Section */}
-                <SectionTitle style={{ cursor: 'default', margin: '1rem 0 0.5rem 0' }}>Genres</SectionTitle>
+                <SectionTitle
+                  style={{ cursor: "default", margin: "1rem 0 0.5rem 0" }}
+                >
+                  Genres
+                </SectionTitle>
                 <GenresGrid>
                   {genresCategories.map((category) => (
                     <GenreButton
@@ -308,13 +399,16 @@ export default function Discover() {
           <FilterGroup>
             <SectionTitle onClick={() => setSortExpanded(!sortExpanded)}>
               Sort
-              <ExpandIcon>{sortExpanded ? 'v' : '>'}</ExpandIcon>
+              <ExpandIcon>{sortExpanded ? "▼" : "▶"}</ExpandIcon>
             </SectionTitle>
-            
+
             {sortExpanded && (
               <SortOptions>
                 {sortOptions.map((option) => (
-                  <SortOption key={option.id} onClick={() => setSortOption(option.id)}>
+                  <SortOption
+                    key={option.id}
+                    onClick={() => setSortOption(option.id)}
+                  >
                     <SortInput
                       type="radio"
                       id={option.id}
@@ -328,18 +422,45 @@ export default function Discover() {
               </SortOptions>
             )}
           </FilterGroup>
+
+          {hasActiveFilters && (
+            <ClearFiltersButton onClick={clearAllFilters}>
+              Clear All Filters
+            </ClearFiltersButton>
+          )}
         </FilterSection>
 
         <MainSection>
           <MovieGrid>
-            {filterdMovies.map((popmovie, index) => (
-              <MovieCard
-                key={popmovie.id || index}
-                id={popmovie.id}
-                title={popmovie.title}
-                poster={`https://image.tmdb.org/t/p/w500${popmovie.poster_path}`}
-                rating={popmovie.vote_average}
-              />
+            {filteredAndSortedMovies.map((movie, index) => (
+              <div key={movie.id || index} style={{ position: 'relative' }}>
+                <MovieCard
+                  id={movie.id}
+                  title={movie.title}
+                  poster={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                  rating={movie.vote_average}
+                />
+                <button
+                  onClick={() => toggleWatched(movie.id)}
+                  style={{
+                    position: 'absolute',
+                    top: '10px',
+                    right: '10px',
+                    background: watchedMovies.includes(movie.id) ? '#3182ce' : 'rgba(0,0,0,0.5)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '50%',
+                    width: '30px',
+                    height: '30px',
+                    cursor: 'pointer',
+                    fontSize: '12px',
+                    zIndex: 10
+                  }}
+                  title={watchedMovies.includes(movie.id) ? "Mark as unwatched" : "Mark as watched"}
+                >
+                  {watchedMovies.includes(movie.id) ? '✓' : '○'}
+                </button>
+              </div>
             ))}
           </MovieGrid>
         </MainSection>
