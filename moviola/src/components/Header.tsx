@@ -3,12 +3,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import styled from "styled-components";
+
 const Nav = styled.nav`
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0.5rem 3rem;
-  background: ;
   box-shadow: 0 10px 10px rgba(0, 0, 0, 0.3);
   position: sticky;
   top: 0;
@@ -16,6 +16,7 @@ const Nav = styled.nav`
   backdrop-filter: blur(10px);
   border-radius: 0.2rem;
 `;
+
 const Logo = styled.h1`
   color: #d32f2f;
   font-size: 1.3rem;
@@ -34,6 +35,11 @@ const Logo = styled.h1`
     transform: translateY(-1px);
     text-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
   }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
 `;
 
 const SearchContainer = styled.div`
@@ -44,12 +50,12 @@ const SearchContainer = styled.div`
 
 const SearchInput = styled.input`
   width: 100%;
-  padding: 0.1rem 1rem 0.4rem 3rem;
-  background: rgba(255, 255, 255, 0.08);
+  padding: 0.5rem 1rem 0.5rem 3rem;
+  background: rgba(255, 255, 255, 0.9);
   border: 1px solid rgba(24, 22, 22, 0.1);
   border-radius: 50px;
-  color: #0e0b0bff;
-  font-size: 0.8rem;
+  color: #0e0b0b;
+  font-size: 0.9rem;
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
 
@@ -59,7 +65,7 @@ const SearchInput = styled.input`
 
   &:focus {
     outline: none;
-    background: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 1);
     border-color: rgba(211, 47, 47, 0.4);
     box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.1);
   }
@@ -68,9 +74,37 @@ const SearchInput = styled.input`
 const SearchIcon = styled.span`
   position: absolute;
   left: 1rem;
-  top: 40%;
+  top: 50%;
   transform: translateY(-50%);
+  color: #666;
   font-size: 1rem;
+`;
+
+const SearchButton = styled.button`
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: linear-gradient(45deg, #d32f2f, #6e38e0ff);
+  border: none;
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-50%) scale(1.05);
+    box-shadow: 0 2px 8px rgba(211, 47, 47, 0.3);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: translateY(-50%);
+  }
 `;
 
 const NavLinks = styled.div`
@@ -119,17 +153,41 @@ const FavoriteLink = styled(NavLink)`
 
 export default function Header() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
   const router = useRouter();
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && searchTerm.trim()) {
-      router.push("/discover");
+
+  const handleSearch = async () => {
+    if (!searchTerm.trim()) return;
+
+    setIsSearching(true);
+    
+    try {
+      // Navigate to search results page with the search query
+      router.push(`/search?q=${encodeURIComponent(searchTerm.trim())}`);
+    } catch (error) {
+      console.error("Search error:", error);
+    } finally {
+      setIsSearching(false);
     }
   };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && searchTerm.trim()) {
+      handleSearch();
+    }
+  };
+
+  const handleLogoClick = () => {
+    setSearchTerm(""); // Clear search when going home
+    router.push("/");
+  };
+
   return (
     <Nav>
-      <Logo>
+      <Logo onClick={handleLogoClick}>
         <Link href="/">Moviola</Link>
       </Logo>
+      
       <SearchContainer>
         <SearchIcon>🔍</SearchIcon>
         <SearchInput
@@ -139,11 +197,19 @@ export default function Header() {
           onKeyDown={handleKeyDown}
           placeholder="Search for movies, genres, actors..."
         />
+        {searchTerm.trim() && (
+          <SearchButton 
+            onClick={handleSearch}
+            disabled={isSearching || !searchTerm.trim()}
+          >
+            {isSearching ? "..." : "Search"}
+          </SearchButton>
+        )}
       </SearchContainer>
 
       <NavLinks>
         <NavLink href="/">Home</NavLink>
-        <NavLink href="/discover">movies</NavLink>
+        <NavLink href="/discover">Movies</NavLink>
         <FavoriteLink href="/favorites">Favorites</FavoriteLink>
         <NavLink href="/watchlist">Watchlist</NavLink>
       </NavLinks>
