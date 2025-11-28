@@ -6,6 +6,8 @@ import { theme } from "@/styles/theme";
 import React from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { FavoriteProvider } from "@/contexts/FavoriteContext";
+import { SearchProvider } from "@/contexts/SearchContext";
 import { WatchlistProvider } from "@/contexts/WatchlistContext";
 export default function Layout({ children }) {
   return (
@@ -14,7 +16,11 @@ export default function Layout({ children }) {
         <Header />
         <ThemeProvider theme={theme}>
           <GloblaStyle />
-          <WatchlistProvider>{children}</WatchlistProvider>
+          <FavoriteProvider>
+            <SearchProvider>
+              <WatchlistProvider>{children}</WatchlistProvider>
+            </SearchProvider>
+          </FavoriteProvider>
         </ThemeProvider>
         <Footer />
       </body>
