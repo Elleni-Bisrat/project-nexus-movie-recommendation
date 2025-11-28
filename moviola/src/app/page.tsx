@@ -4,6 +4,7 @@ import MovieCard from "@/components/MovieCard";
 import styled from "styled-components";
 import { fetchTrendingMovies } from "@/lib/api";
 import { fetchMovieDetails } from "@/lib/api";
+import Link from "next/link";
 const Container = styled.div`
   min-height: 100vh;
   background: #ffffff;
@@ -162,7 +163,9 @@ export default function Home() {
           Your gateway to movies that move you. Discover, watch, and fall in
           love with cinema again.
         </HeroSubtitle>
-        <CTAButton>Explore Movies</CTAButton>
+        <CTAButton>
+          <Link href="/discover">Explore Movies</Link>
+        </CTAButton>
       </HeroSection>
       <Section>
         <SectionTitle>Trending Now</SectionTitle>

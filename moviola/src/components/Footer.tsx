@@ -113,10 +113,6 @@ const FooterLink = styled(Link)`
   color: #9ca3af;
   font-size: 0.875rem;
   transition: color 0.2s ease;
-
-  &:hover {
-    color: ${(props) => props.hoverColor || "#6e38e0ff"};
-  }
 `;
 
 const NewsletterSection = styled.div`

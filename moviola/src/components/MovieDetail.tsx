@@ -1,7 +1,7 @@
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useFavoritelist } from "@/contexts/FavoriteContext"; 
+import { useFavoritelist } from "@/contexts/FavoriteContext";
 import { useWatchlist } from "@/contexts/WatchlistContext";
 const Container = styled.div`
   background-image: ${(props) =>
@@ -86,11 +86,12 @@ const IconButtonWrapper = styled.div`
 const IconButton = styled.button`
   background: none;
   border: none;
- color: ${(props) => {
+  color: ${(props) => {
     if (props.$isFavorite) return "#ff4444";
     if (props.$isInWatchlist) return "#4ecdc4";
     return "white";
-  }};  font-size: 1.5rem;
+  }};
+  font-size: 1.5rem;
   cursor: pointer;
   padding: 8px;
   border-radius: 50%;
@@ -262,11 +263,12 @@ export default function MovieDetail({ id }: { id: string }) {
   const [movie, setMovie] = useState<any>(null);
   const [cast, setCast] = useState<any[]>([]);
   const { addToWatchlist, removeFromWatchlist, isInWatchlist } = useWatchlist();
-  const { addToFavoriteList, removeFromFavoritelist, isFavorite } = useFavoritelist();
-  
+  const { addToFavoriteList, removeFromFavoritelist, isFavorite } =
+    useFavoritelist();
+
   const [isMovieInWatchlist, setIsMovieInWatchlist] = useState(false);
   const [isMovieFavorite, setIsMovieFavorite] = useState(false);
-  
+
   const router = useRouter();
   const API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY;
 
@@ -338,7 +340,7 @@ export default function MovieDetail({ id }: { id: string }) {
           backdrop_path: movie.backdrop_path,
           release_date: movie.release_date,
           vote_average: movie.vote_average,
-          overview: movie.overview
+          overview: movie.overview,
         });
         setIsMovieFavorite(true);
       }
@@ -358,7 +360,7 @@ export default function MovieDetail({ id }: { id: string }) {
           backdrop_path: movie.backdrop_path,
           release_date: movie.release_date,
           vote_average: movie.vote_average,
-          overview: movie.overview
+          overview: movie.overview,
         });
         setIsMovieInWatchlist(true);
       }
@@ -383,7 +385,7 @@ export default function MovieDetail({ id }: { id: string }) {
   return (
     <>
       <Container
-        backgroundImage={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
+        $backgroundImage={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
       >
         <ContentWrapper>
           <PosterSection>
@@ -402,30 +404,34 @@ export default function MovieDetail({ id }: { id: string }) {
             <InteractiveSection>
               {/* Favorite Button */}
               <IconButtonWrapper>
-                <IconButton 
+                <IconButton
                   $isFavorite={isMovieFavorite}
                   onClick={toggleFavorite}
                 >
                   {isMovieFavorite ? "❤️" : "🤍"}
                 </IconButton>
                 <Tooltip>
-                  {isMovieFavorite ? "Remove from favorites" : "Add to favorites"}
+                  {isMovieFavorite
+                    ? "Remove from favorites"
+                    : "Add to favorites"}
                 </Tooltip>
               </IconButtonWrapper>
-              
+
               {/* Watchlist Button */}
               <IconButtonWrapper>
-                <IconButton 
+                <IconButton
                   $isInWatchlist={isMovieInWatchlist}
                   onClick={toggleWatchlist}
                 >
                   {isMovieInWatchlist ? "✅" : "🎦"}
                 </IconButton>
                 <Tooltip>
-                  {isMovieInWatchlist ? "Remove from watchlist" : "Add to watchlist"}
+                  {isMovieInWatchlist
+                    ? "Remove from watchlist"
+                    : "Add to watchlist"}
                 </Tooltip>
               </IconButtonWrapper>
-              
+
               <PlayTrailerButton>▶ Play Trailer</PlayTrailerButton>
             </InteractiveSection>
 
