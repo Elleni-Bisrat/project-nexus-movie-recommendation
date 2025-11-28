@@ -1,6 +1,7 @@
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import styled from "styled-components";
+import { useFavoritelist } from "@/contexts/FavoriteContext"; 
 import { useWatchlist } from "@/contexts/WatchlistContext";
 const Container = styled.div`
   background-image: ${(props) =>
@@ -257,12 +258,15 @@ const Watchnow = styled.button`
   transform: translateY(-5px);
   }
 `;
-export default function MovieDetail({ id }) {
+export default function MovieDetail({ id }: { id: string }) {
   const [movie, setMovie] = useState<any>(null);
   const [cast, setCast] = useState<any[]>([]);
-  const [isFavorite, setIsFavorite] = useState(false);
   const { addToWatchlist, removeFromWatchlist, isInWatchlist } = useWatchlist();
-  const [isMovieInWatchlist, setIsMovieInWatchlist] = useState(false); // ← Changed variable name
+  const { addToFavoriteList, removeFromFavoritelist, isFavorite } = useFavoritelist();
+  
+  const [isMovieInWatchlist, setIsMovieInWatchlist] = useState(false);
+  const [isMovieFavorite, setIsMovieFavorite] = useState(false);
+  
   const router = useRouter();
   const API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY;
 
@@ -296,12 +300,13 @@ export default function MovieDetail({ id }) {
     }
   };
 
-  // Check if movie is in watchlist when movie data is loaded
+  // Check if movie is in watchlist and favorites when movie data is loaded
   useEffect(() => {
     if (movie) {
       setIsMovieInWatchlist(isInWatchlist(movie.id));
+      setIsMovieFavorite(isFavorite(movie.id));
     }
-  }, [movie, isInWatchlist]);
+  }, [movie, isInWatchlist, isFavorite]);
 
   const getRating = () => {
     return movie?.vote_average ? movie.vote_average.toFixed(1) : "N/A";
@@ -321,7 +326,23 @@ export default function MovieDetail({ id }) {
   };
 
   const toggleFavorite = () => {
-    setIsFavorite(!isFavorite);
+    if (movie) {
+      if (isMovieFavorite) {
+        removeFromFavoritelist(movie.id);
+        setIsMovieFavorite(false);
+      } else {
+        addToFavoriteList({
+          id: movie.id,
+          title: movie.title,
+          poster_path: movie.poster_path,
+          backdrop_path: movie.backdrop_path,
+          release_date: movie.release_date,
+          vote_average: movie.vote_average,
+          overview: movie.overview
+        });
+        setIsMovieFavorite(true);
+      }
+    }
   };
 
   const toggleWatchlist = () => {
@@ -382,13 +403,13 @@ export default function MovieDetail({ id }) {
               {/* Favorite Button */}
               <IconButtonWrapper>
                 <IconButton 
-                  $isFavorite={isFavorite}
+                  $isFavorite={isMovieFavorite}
                   onClick={toggleFavorite}
                 >
-                  {isFavorite ? "❤️" : "🤍"}
+                  {isMovieFavorite ? "❤️" : "🤍"}
                 </IconButton>
                 <Tooltip>
-                  {isFavorite ? "Remove from favorites" : "Add to favorites"}
+                  {isMovieFavorite ? "Remove from favorites" : "Add to favorites"}
                 </Tooltip>
               </IconButtonWrapper>
               
@@ -429,7 +450,7 @@ export default function MovieDetail({ id }) {
               <DetailValue>
                 {movie.original_language?.toUpperCase() || "N/A"}
               </DetailValue>
-            <Watchnow>▶ Watch now</Watchnow>
+              <Watchnow>▶ Watch now</Watchnow>
             </DetailsGrid>
           </InfoSection>
         </ContentWrapper>
