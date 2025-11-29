@@ -3,7 +3,9 @@ import React, { useEffect, useState, useMemo } from "react";
 import MovieCard from "@/components/MovieCard";
 import styled from "styled-components";
 import { fetchMovieDetails } from "@/lib/api";
-
+interface ButtonProps {
+  selected?: boolean;
+}
 const Container = styled.div`
   display: grid;
   grid-template-columns: 250px 1fr;
@@ -89,7 +91,7 @@ const GenresGrid = styled.div`
   margin-top: 1rem;
 `;
 
-const GenreButton = styled.button`
+const GenreButton = styled.button<ButtonProps>`
   padding: 0.3rem 0.1rem;
   border: 1px solid #cbd5e0;
   border-radius: 15px;
