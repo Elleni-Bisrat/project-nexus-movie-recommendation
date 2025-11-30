@@ -1,4 +1,7 @@
+##Deploye link = https://project-nexus-movie-recommendation-green.vercel.app/
+
 # project-nexus-movie-recommendation
+
 # Moviola — Movie Recommendation & Discovery App
 
 Moviola is a modern, responsive web application for discovering movies, exploring detailed information, and managing a personal watchlist. Built with Next.js, TypeScript, and Styled Components, it delivers a cinematic user experience powered by real-time data from The Movie Database (TMDB) API.
@@ -8,19 +11,23 @@ Moviola is a modern, responsive web application for discovering movies, explorin
 ## Features
 
 ### Home Page
+
 - Dynamic hero section with rotating backgrounds from trending movies
 - Real-time display of trending and popular movies
 - Responsive design optimized for all devices
 - Smooth transitions and hover animations
 
 ### Movie Detail Page
+
 **Includes:**
+
 - High-quality posters and backdrop images
 - Ratings, runtime, release year, and genres
 - Movie overview and tagline
 - Language and metadata
 
 **Interactive Tools:**
+
 - Add to Favorites
 - Add to Watchlist (stored in localStorage)
 - Tooltips on hover
@@ -28,6 +35,7 @@ Moviola is a modern, responsive web application for discovering movies, explorin
 - Cast section with actor images and character names
 
 ### Watchlist Management
+
 - Save movies to a personal watchlist
 - Persistent storage using localStorage
 - One-click add/remove
@@ -38,6 +46,7 @@ Moviola is a modern, responsive web application for discovering movies, explorin
 ---
 
 ## UI/UX Highlights
+
 - Clean, modern dark-themed design
 - Gradient accents and smooth transitions
 - Custom tooltips
@@ -49,15 +58,18 @@ Moviola is a modern, responsive web application for discovering movies, explorin
 ## Technical Stack
 
 ### Frontend
+
 - Next.js 14 (App Router)
 - React
 - TypeScript
 - Styled Components
 
 ### API
+
 - TMDB API for movie data, metadata, cast information, and images
 
 ### State Management
+
 - React Context API
 - LocalStorage persistence
 - useState and useEffect for component logic
@@ -68,31 +80,32 @@ Moviola is a modern, responsive web application for discovering movies, explorin
 
 src/
 ├── app/
-│   ├── layout.tsx               # Root layout with providers
-│   ├── page.tsx                 # Home page
-│   ├── movie/
-│   │   └── [id]/
-│   │       └── page.tsx         # Movie detail pages
-│   └── watchlist/
-│       └── page.tsx             # Watchlist page
+│ ├── layout.tsx # Root layout with providers
+│ ├── page.tsx # Home page
+│ ├── movie/
+│ │ └── [id]/
+│ │ └── page.tsx # Movie detail pages
+│ └── watchlist/
+│ └── page.tsx # Watchlist page
 │
 ├── components/
-│   ├── MovieCard.tsx            # Movie card component
-│   ├── MovieDetail.tsx          # Movie detail view
-│   └── Header.tsx               # Navigation header
+│ ├── MovieCard.tsx # Movie card component
+│ ├── MovieDetail.tsx # Movie detail view
+│ └── Header.tsx # Navigation header
 │
 ├── contexts/
-│   └── WatchlistContext.tsx     # Global watchlist state
+│ └── WatchlistContext.tsx # Global watchlist state
 │
 └── styles/
-├── globalstyles.ts          # Global styles
-└── theme.ts                 # Design tokens
+├── globalstyles.ts # Global styles
+└── theme.ts # Design tokens
 
 ---
 
 ## Installation & Setup
 
 ### 1. Clone the repository
+
 ```bash
 git clone [repository-url]
 cd moviola
@@ -188,3 +201,4 @@ Light/dark theme toggle
 
 Internationalization support
 
+```
