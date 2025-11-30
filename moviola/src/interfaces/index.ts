@@ -28,5 +28,5 @@ export interface FavoriteList{
   addTOFavoritelist:(movie:Movie)=>void;
   removeFromFavoritelist:(moviId:number)=>void;
   isFavorite:(moviId:number)=>boolean;
-  clearFavorite:()=>void;
+  clearFavoritelist:()=>void;
 }
