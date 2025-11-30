@@ -1,5 +1,4 @@
 "use client";
-
 import { GloblaStyle } from "@/styles/globalstyles";
 import { ThemeProvider } from "styled-components";
 import { theme } from "@/styles/theme";
@@ -9,7 +8,11 @@ import Footer from "@/components/Footer";
 import { FavoriteProvider } from "@/contexts/FavoriteContext";
 import { SearchProvider } from "@/contexts/SearchContext";
 import { WatchlistProvider } from "@/contexts/WatchlistContext";
-export default function Layout({ children }) {
+interface LayoutProps {
+  children: React.ReactNode;
+}
+
+export default function Layout({ children }: LayoutProps) {
   return (
     <html lang="en">
       <body>
