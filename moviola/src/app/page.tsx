@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { fetchTrendingMovies } from "@/lib/api";
 import { fetchMovieDetails } from "@/lib/api";
 import Link from "next/link";
+import { Movie, MovieCardProps } from "@/interfaces";
 const Container = styled.div`
   min-height: 100vh;
   background: #ffffff;
@@ -110,8 +111,8 @@ const MovieRow = styled.div`
     background: transparent;
 `;
 export default function Home() {
-  const [movies, setMovies] = useState([]);
-  const [popularMovies, setPopularMovies] = useState([]);
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const [popularMovies, setPopularMovies] = useState<Movie[]>([]);
   const [currentBackgroundIndex, setCurrentBackgroundIndex] = useState(0);
 
   const API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY;

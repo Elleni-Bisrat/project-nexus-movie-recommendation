@@ -25,7 +25,7 @@ export interface WatchlistContextType {
 }
 export interface FavoriteList{
   favoritelist:Movie[];
-  addTOFavoritelist:(movie:Movie)=>void;
+  addToFavoriteList:(movie:Movie)=>void;
   removeFromFavoritelist:(moviId:number)=>void;
   isFavorite:(moviId:number)=>boolean;
   clearFavoritelist:()=>void;

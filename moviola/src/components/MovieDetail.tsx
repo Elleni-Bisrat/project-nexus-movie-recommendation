@@ -3,7 +3,14 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useFavoritelist } from "@/contexts/FavoriteContext";
 import { useWatchlist } from "@/contexts/WatchlistContext";
-
+import { Movie } from "@/interfaces";
+interface ContainerProps {
+  $backgroundImage?: string;
+}
+interface IconButtonProps {
+  $isFavorite?: boolean;
+  $isInWatchlist?: boolean;
+}
 export default function MovieDetail({ id }: { id: string }) {
   const [movie, setMovie] = useState<any>(null);
   const [cast, setCast] = useState<any[]>([]);
@@ -80,12 +87,14 @@ export default function MovieDetail({ id }: { id: string }) {
       } else {
         addToFavoriteList({
           id: movie.id,
-          title: movie.title,
-          poster_path: movie.poster_path,
-          backdrop_path: movie.backdrop_path,
-          release_date: movie.release_date,
-          vote_average: movie.vote_average,
-          overview: movie.overview,
+          title: movie.title || "Unknown Title",
+          poster_path: movie.poster_path || "",
+          backdrop_path: movie.backdrop_path || "",
+          release_date: movie.release_date || "",
+          vote_average: movie.vote_average || 0,
+          overview: movie.overview || "",
+          popularity: movie.popularity || 0, // REQUIRED
+          genre_ids: movie.genre_ids || [],
         });
         setIsMovieFavorite(true);
       }
@@ -231,7 +240,7 @@ export default function MovieDetail({ id }: { id: string }) {
   );
 }
 
-const Container = styled.div`
+const Container = styled.div<ContainerProps>`
   background-image: ${(props) =>
     props.$backgroundImage ? `url(${props.$backgroundImage})` : "none"};
   background-size: cover;
@@ -397,7 +406,7 @@ const IconButtonWrapper = styled.div`
   display: inline-block;
 `;
 
-const IconButton = styled.button`
+const IconButton = styled.button<IconButtonProps>`
   background: none;
   border: none;
   color: ${(props) => {

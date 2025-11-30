@@ -99,7 +99,9 @@ export default function SearchPage() {
       <Container>
         <Content>
           <Title>Search Movies</Title>
-          <NoResultsText>Please enter a search term to find movies.</NoResultsText>
+          <NoResultsText>
+            Please enter a search term to find movies.
+          </NoResultsText>
         </Content>
       </Container>
     );
@@ -109,7 +111,9 @@ export default function SearchPage() {
     return (
       <Container>
         <Content>
-          <Title>Searching for "<SearchQuery>{query}</SearchQuery>"</Title>
+          <Title>
+            Searching for <SearchQuery>{query}</SearchQuery>
+          </Title>
           <LoadingText>Searching movies...</LoadingText>
         </Content>
       </Container>
@@ -120,7 +124,9 @@ export default function SearchPage() {
     return (
       <Container>
         <Content>
-          <Title>Search Results for "<SearchQuery>{query}</SearchQuery>"</Title>
+          <Title>
+            Search Results for <SearchQuery>{query}</SearchQuery>
+          </Title>
           <ErrorText>{error}</ErrorText>
         </Content>
       </Container>
@@ -130,10 +136,13 @@ export default function SearchPage() {
   return (
     <Container>
       <Content>
-        <Title>Search Results for "<SearchQuery>{query}</SearchQuery>"</Title>
-        
+        <Title>
+          Search Results for <SearchQuery>{query}</SearchQuery>
+        </Title>
+
         <ResultsCount>
-          Found {searchResults.length} {searchResults.length === 1 ? 'movie' : 'movies'}
+          Found {searchResults.length}{" "}
+          {searchResults.length === 1 ? "movie" : "movies"}
         </ResultsCount>
 
         {searchResults.length > 0 ? (
@@ -150,8 +159,8 @@ export default function SearchPage() {
           </ResultsGrid>
         ) : (
           <NoResultsText>
-            No movies found for "<SearchQuery>{query}</SearchQuery>". 
-            Try a different search term.
+            No movies found for <SearchQuery>{query}</SearchQuery>. Try a
+            different search term.
           </NoResultsText>
         )}
       </Content>
