@@ -15,6 +15,21 @@ const Nav = styled.nav`
   z-index: 1000;
   backdrop-filter: blur(10px);
   border-radius: 0.2rem;
+
+  @media (max-width: 1024px) {
+    padding: 0.5rem 2rem;
+  }
+
+  @media (max-width: 768px) {
+    padding: 0.5rem 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 0.5rem 1rem;
+    gap: 0.8rem;
+  }
 `;
 
 const Logo = styled.h1`
@@ -40,12 +55,38 @@ const Logo = styled.h1`
     text-decoration: none;
     color: inherit;
   }
+
+  @media (max-width: 768px) {
+    font-size: 1.2rem;
+    letter-spacing: 0.4px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 1.1rem;
+    letter-spacing: 0.3px;
+  }
 `;
 
 const SearchContainer = styled.div`
   position: relative;
   flex: 0 1 400px;
   margin: 0 2rem;
+
+  @media (max-width: 1024px) {
+    flex: 0 1 350px;
+    margin: 0 1.5rem;
+  }
+
+  @media (max-width: 768px) {
+    flex: 1 1 100%;
+    order: 3;
+    margin: 0;
+    min-width: 100%;
+  }
+
+  @media (max-width: 480px) {
+    flex: 1 1 100%;
+  }
 `;
 
 const SearchInput = styled.input`
@@ -69,6 +110,11 @@ const SearchInput = styled.input`
     border-color: rgba(211, 47, 47, 0.4);
     box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.1);
   }
+
+  @media (max-width: 480px) {
+    padding: 0.5rem 1rem 0.5rem 2.5rem;
+    font-size: 0.85rem;
+  }
 `;
 
 const SearchIcon = styled.span`
@@ -78,6 +124,11 @@ const SearchIcon = styled.span`
   transform: translateY(-50%);
   color: #666;
   font-size: 1rem;
+
+  @media (max-width: 480px) {
+    left: 0.8rem;
+    font-size: 0.9rem;
+  }
 `;
 
 const SearchButton = styled.button`
@@ -105,12 +156,29 @@ const SearchButton = styled.button`
     cursor: not-allowed;
     transform: translateY(-50%);
   }
+
+  @media (max-width: 480px) {
+    padding: 0.3rem 0.7rem;
+    font-size: 0.75rem;
+  }
 `;
 
 const NavLinks = styled.div`
   display: flex;
   align-items: center;
   gap: 2rem;
+
+  @media (max-width: 1024px) {
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 768px) {
+    gap: 1.2rem;
+  }
+
+  @media (max-width: 480px) {
+    gap: 1rem;
+  }
 `;
 
 const NavLink = styled(Link)`
@@ -121,6 +189,7 @@ const NavLink = styled(Link)`
   padding: 0.5rem 0;
   position: relative;
   transition: all 0.3s ease;
+  white-space: nowrap;
 
   &::after {
     content: "";
@@ -140,6 +209,19 @@ const NavLink = styled(Link)`
       width: 100%;
     }
   }
+
+  @media (max-width: 1024px) {
+    font-size: 0.85rem;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 0.8rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.75rem;
+    padding: 0.3rem 0;
+  }
 `;
 
 const FavoriteLink = styled(NavLink)`
@@ -148,6 +230,16 @@ const FavoriteLink = styled(NavLink)`
 
   &:hover {
     color: #9d2222ff;
+  }
+`;
+
+const MobileMenuWrapper = styled.div`
+  display: none;
+
+  @media (max-width: 768px) {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
   }
 `;
 
@@ -162,7 +254,6 @@ export default function Header() {
     setIsSearching(true);
     
     try {
-      // Navigate to search results page with the search query
       router.push(`/search?q=${encodeURIComponent(searchTerm.trim())}`);
     } catch (error) {
       console.error("Search error:", error);
@@ -178,7 +269,7 @@ export default function Header() {
   };
 
   const handleLogoClick = () => {
-    setSearchTerm(""); // Clear search when going home
+    setSearchTerm("");
     router.push("/");
   };
 
@@ -187,7 +278,7 @@ export default function Header() {
       <Logo onClick={handleLogoClick}>
         <Link href="/">Moviola</Link>
       </Logo>
-      
+
       <SearchContainer>
         <SearchIcon>🔍</SearchIcon>
         <SearchInput

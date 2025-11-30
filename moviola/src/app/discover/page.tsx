@@ -3,9 +3,11 @@ import React, { useEffect, useState, useMemo } from "react";
 import MovieCard from "@/components/MovieCard";
 import styled from "styled-components";
 import { fetchMovieDetails } from "@/lib/api";
+
 interface ButtonProps {
   selected?: boolean;
 }
+
 const Container = styled.div`
   display: grid;
   grid-template-columns: 250px 1fr;
@@ -14,6 +16,23 @@ const Container = styled.div`
   margin: 0 auto;
   padding: 2rem;
   min-height: 100vh;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 220px 1fr;
+    gap: 1.5rem;
+    padding: 1.5rem;
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 0.8rem;
+    gap: 0.8rem;
+  }
 `;
 
 const FilterSection = styled.section`
@@ -25,10 +44,24 @@ const FilterSection = styled.section`
   height: fit-content;
   top: 2rem;
   margin-top: 0.7rem;
+
+  @media (max-width: 768px) {
+    position: static;
+    margin-top: 0;
+    padding: 1.5rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 1rem;
+  }
 `;
 
 const MainSection = styled.section`
   padding: 0 0;
+
+  @media (max-width: 768px) {
+    padding: 0;
+  }
 `;
 
 const FilterTitle = styled.h2`
@@ -38,6 +71,11 @@ const FilterTitle = styled.h2`
   margin-bottom: 1.5rem;
   padding-bottom: 0.5rem;
   border-bottom: 2px solid #e2e8f0;
+
+  @media (max-width: 480px) {
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+  }
 `;
 
 const SectionTitle = styled.h3`
@@ -52,6 +90,11 @@ const SectionTitle = styled.h3`
 
   &:hover {
     color: #3182ce;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.9rem;
+    margin: 1rem 0 0.8rem 0;
   }
 `;
 
@@ -89,6 +132,19 @@ const GenresGrid = styled.div`
   grid-template-columns: 1fr 1fr;
   gap: 0.5rem;
   margin-top: 1rem;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+    gap: 0.3rem;
+  }
 `;
 
 const GenreButton = styled.button<ButtonProps>`
@@ -100,11 +156,19 @@ const GenreButton = styled.button<ButtonProps>`
   font-size: 0.7rem;
   cursor: pointer;
   transition: all 0.2s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   &:hover {
     background: ${(props) => (props.selected ? "#3182ce" : "#f7fafc")};
     border-color: #3182ce;
     transform: translateY(-1px);
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.65rem;
+    padding: 0.4rem 0.2rem;
   }
 `;
 
@@ -138,6 +202,10 @@ const Divider = styled.div`
   height: 1px;
   background: linear-gradient(to right, transparent, #cbd5e0, transparent);
   margin: 1rem 0;
+
+  @media (max-width: 480px) {
+    margin: 0.8rem 0;
+  }
 `;
 
 const MovieGrid = styled.div`
@@ -145,6 +213,38 @@ const MovieGrid = styled.div`
   grid-template-columns: repeat(5, 1fr);
   gap: 1.5rem;
   padding: 1rem 0;
+
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.2rem;
+  }
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.2rem;
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    padding: 0.5rem 0;
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem;
+    padding: 0.3rem 0;
+  }
+
+  @media (max-width: 360px) {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
 `;
 
 const PageTitle = styled.h1`
@@ -153,10 +253,28 @@ const PageTitle = styled.h1`
   color: #2d3748;
   margin-top: 2rem;
   margin-left: 4rem;
+
+  @media (max-width: 1024px) {
+    margin-left: 3rem;
+  }
+
+  @media (max-width: 768px) {
+    margin: 1.5rem 1rem 0.5rem 1rem;
+    text-align: center;
+  }
+
+  @media (max-width: 480px) {
+    margin: 1rem 0.5rem 0.5rem 0.5rem;
+    font-size: 0.9rem;
+  }
 `;
 
 const Label = styled.label`
   font-size: 12px;
+
+  @media (max-width: 480px) {
+    font-size: 11px;
+  }
 `;
 
 const ExpandIcon = styled.span`
@@ -169,6 +287,12 @@ const ResultsInfo = styled.div`
   font-size: 0.9rem;
   margin-bottom: 1rem;
   padding: 0 1rem;
+
+  @media (max-width: 480px) {
+    font-size: 0.8rem;
+    padding: 0 0.5rem;
+    text-align: center;
+  }
 `;
 
 const ClearFiltersButton = styled.button`
@@ -181,10 +305,17 @@ const ClearFiltersButton = styled.button`
   cursor: pointer;
   margin-top: 1rem;
   transition: all 0.2s ease;
+  width: 100%;
 
   &:hover {
     background: #c53030;
     transform: translateY(-1px);
+  }
+
+  @media (max-width: 480px) {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.75rem;
+    margin-top: 0.8rem;
   }
 `;
 
@@ -237,7 +368,7 @@ export default function Discover() {
 
   // Load watched movies from localStorage
   useEffect(() => {
-    const savedWatched = localStorage.getItem('watchedMovies');
+    const savedWatched = localStorage.getItem("watchedMovies");
     if (savedWatched) {
       setWatchedMovies(JSON.parse(savedWatched));
     }
@@ -245,13 +376,13 @@ export default function Discover() {
 
   // Save watched movies to localStorage
   useEffect(() => {
-    localStorage.setItem('watchedMovies', JSON.stringify(watchedMovies));
+    localStorage.setItem("watchedMovies", JSON.stringify(watchedMovies));
   }, [watchedMovies]);
 
   const toggleWatched = (movieId: number) => {
-    setWatchedMovies(prev => 
-      prev.includes(movieId) 
-        ? prev.filter(id => id !== movieId)
+    setWatchedMovies((prev) =>
+      prev.includes(movieId)
+        ? prev.filter((id) => id !== movieId)
         : [...prev, movieId]
     );
   };
@@ -261,7 +392,10 @@ export default function Discover() {
     let filtered = popularMovies.filter((movie) => {
       // Genre filter
       if (selectedGenre !== "All") {
-        if (!movie.genre_ids || !movie.genre_ids.includes(genreMap[selectedGenre])) {
+        if (
+          !movie.genre_ids ||
+          !movie.genre_ids.includes(genreMap[selectedGenre])
+        ) {
           return false;
         }
       }
@@ -318,14 +452,17 @@ export default function Discover() {
     fetchPopularMovies();
   }, []);
 
-  const hasActiveFilters = selectedGenre !== "All" || showOption !== "everything" || sortOption !== "popularity";
+  const hasActiveFilters =
+    selectedGenre !== "All" ||
+    showOption !== "everything" ||
+    sortOption !== "popularity";
 
   return (
     <>
       <PageTitle>Popular Movies</PageTitle>
+
       <Container>
         <FilterSection>
-          {/* Filter Section */}
           <FilterGroup>
             <SectionTitle onClick={() => setFilterExpanded(!filterExpanded)}>
               Filter
@@ -374,7 +511,6 @@ export default function Discover() {
 
                 <Divider />
 
-                {/* Genres Section */}
                 <SectionTitle
                   style={{ cursor: "default", margin: "1rem 0 0.5rem 0" }}
                 >
@@ -397,7 +533,6 @@ export default function Discover() {
 
           <Divider />
 
-          {/* Sort Section */}
           <FilterGroup>
             <SectionTitle onClick={() => setSortExpanded(!sortExpanded)}>
               Sort
@@ -435,7 +570,7 @@ export default function Discover() {
         <MainSection>
           <MovieGrid>
             {filteredAndSortedMovies.map((movie, index) => (
-              <div key={movie.id || index} style={{ position: 'relative' }}>
+              <div key={movie.id || index} style={{ position: "relative" }}>
                 <MovieCard
                   id={movie.id}
                   title={movie.title}
@@ -445,22 +580,28 @@ export default function Discover() {
                 <button
                   onClick={() => toggleWatched(movie.id)}
                   style={{
-                    position: 'absolute',
-                    top: '10px',
-                    right: '10px',
-                    background: watchedMovies.includes(movie.id) ? '#3182ce' : 'rgba(0,0,0,0.5)',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '50%',
-                    width: '30px',
-                    height: '30px',
-                    cursor: 'pointer',
-                    fontSize: '12px',
-                    zIndex: 10
+                    position: "absolute",
+                    top: "10px",
+                    right: "10px",
+                    background: watchedMovies.includes(movie.id)
+                      ? "#3182ce"
+                      : "rgba(0,0,0,0.5)",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "50%",
+                    width: "30px",
+                    height: "30px",
+                    cursor: "pointer",
+                    fontSize: "12px",
+                    zIndex: 10,
                   }}
-                  title={watchedMovies.includes(movie.id) ? "Mark as unwatched" : "Mark as watched"}
+                  title={
+                    watchedMovies.includes(movie.id)
+                      ? "Mark as unwatched"
+                      : "Mark as watched"
+                  }
                 >
-                  {watchedMovies.includes(movie.id) ? '✓' : '○'}
+                  {watchedMovies.includes(movie.id) ? "✓" : "○"}
                 </button>
               </div>
             ))}
