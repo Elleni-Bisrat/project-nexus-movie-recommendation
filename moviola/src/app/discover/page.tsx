@@ -3,7 +3,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import MovieCard from "@/components/MovieCard";
 import styled from "styled-components";
 import { fetchMovieDetails } from "@/lib/api";
-
+import { Movie } from "@/interfaces";
 interface ButtonProps {
   selected?: boolean;
 }
@@ -320,7 +320,7 @@ const ClearFiltersButton = styled.button`
 `;
 
 export default function Discover() {
-  const [popularMovies, setPopularMovies] = useState([]);
+  const [popularMovies, setPopularMovies] = useState<Movie[]>([]);
   const [selectedGenre, setSelectedGenre] = useState("All");
   const [showOption, setShowOption] = useState("everything");
   const [sortOption, setSortOption] = useState("popularity");
@@ -389,7 +389,7 @@ export default function Discover() {
 
   // Filter and sort movies using useMemo for performance
   const filteredAndSortedMovies = useMemo(() => {
-    let filtered = popularMovies.filter((movie) => {
+    const filtered = popularMovies.filter((movie) => {
       // Genre filter
       if (selectedGenre !== "All") {
         if (

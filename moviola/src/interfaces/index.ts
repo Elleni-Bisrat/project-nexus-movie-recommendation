@@ -13,6 +13,8 @@ export interface Movie {
   vote_average: number;
   overview: string;
   addedAt?: string;
+  genre_ids?:number[];
+  popularity: number;
 }
 export interface WatchlistContextType {
   watchlist: Movie[];
